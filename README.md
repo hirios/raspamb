@@ -2,13 +2,10 @@
 
 1) Primeiramente clone o respositório usando:
 
-'''js
 $ git clone https://github.com/amaimonrios/raspamb
-'''
 
-'''js
-cd raspamb
-'''
+$ cd raspamb
+
 
 Obs: Você também pode baixar manualmente e extrair os arquivos para uma pasta
 
