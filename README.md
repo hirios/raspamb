@@ -28,7 +28,7 @@ $ unzip chromedriver_linux64.zip
 
 **Para Win User**
 
-Baixe manualmente o driver e deixe na mesma pasta que o arquivo raspamb.py
+Baixe manualmente o driver extraia para mesma pasta que o arquivo raspamb.py está
 
 link para download do drive = https://chromedriver.storage.googleapis.com/index.html?path=74.0.3729.6/
 
