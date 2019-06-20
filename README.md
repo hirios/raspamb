@@ -4,7 +4,9 @@
 
 $ git clone https://github.com/amaimonrios/raspamb
 
+''' 
 $ cd raspamb
+'''
 
 Obs: Você também pode baixar manualmente e extrair os arquivos para uma pasta
 
