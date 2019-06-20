@@ -1,6 +1,6 @@
 # INSTALAÇÃO 
 
-**Primeiramente clone o respositório usando:**
+**Primeiramente clone o repositório usando:**
 
 $ git clone https://github.com/amaimonrios/raspamb
 
