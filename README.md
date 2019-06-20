@@ -2,9 +2,7 @@
 
 Importando dependências:
 
-$ pip install bs4
-
-$ pip install selenium
+$ pip install -r requirements.txt
 
 1) Baixe o arquivo raspamb.py
 
