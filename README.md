@@ -1,6 +1,6 @@
 # INSTALAÇÃO 
 
-1 Primeiramente clone o respositório usando:
+1) Primeiramente clone o respositório usando:
 
 $ git clone https://github.com/amaimonrios/raspamb
 
@@ -18,6 +18,7 @@ $ pip install -r requirements.txt
 
 Obs: Escolha a versão específica para seu sistema operacional, de prefêrencia uma versão 74 do chromedrive.
 
+
 # Para Linux User que usam Google Chrome
 
 $ wget https://chromedriver.storage.googleapis.com/74.0.3729.6/chromedriver_linux64.zip
@@ -28,7 +29,6 @@ $ wget https://chromedriver.storage.googleapis.com/74.0.3729.6/chromedriver_linu
 Baixe manualmente o driver e deixe na mesma pasta que o arquivo raspamb.py
 
 link para download do drive = https://chromedriver.storage.googleapis.com/index.html?path=74.0.3729.6/
-
 
 Esse driver usará o navegador chrome, mas existem outros drivers para outros navegadores como o Geckodrive  para Firefox, e PhantomJS, para utilizá-los, deverá modificar o código.
 
