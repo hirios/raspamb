@@ -2,11 +2,11 @@
 
 1) Primeiramente clone o respositório usando:
 
-'''
+'''js
 $ git clone https://github.com/amaimonrios/raspamb
 '''
 
-'''
+'''js
 cd raspamb
 '''
 
