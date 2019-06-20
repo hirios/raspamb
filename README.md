@@ -10,12 +10,12 @@ $ cd raspamb
 Obs: Você também pode baixar manualmente e extrair os arquivos para uma pasta
 
 
-**-Instale as dependências:**
+**2) Instale as dependências:**
 
 $ pip install -r requirements.txt
 
 
-**Baixe o driver (que permite a conexão com o navegador) para o Selenium e deixe-o na mesma pasta que o raspamb.py**
+**3) Baixe o driver (que permite a conexão com o navegador) para o Selenium e deixe-o na mesma pasta que o raspamb.py**
 
 Obs: Escolha a versão específica para seu sistema operacional, de prefêrencia uma versão 74 do chromedrive.
 
