@@ -12,7 +12,7 @@ Obs: Você também pode baixar manualmente e extrair os arquivos para uma pasta
 
 **2) Instale as dependências:**
 
-$ pip install -r requirements.txt
+$ sudo pip install -r requirements.txt
 
 
 **3) Baixe o driver (que permite a conexão com o navegador) para o Selenium e deixe-o na mesma pasta que o raspamb.py**
