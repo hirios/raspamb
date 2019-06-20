@@ -24,6 +24,7 @@ Obs: Escolha a versão específica para seu sistema operacional, de prefêrencia
 
 $ wget https://chromedriver.storage.googleapis.com/74.0.3729.6/chromedriver_linux64.zip
 
+$ unzip chromedriver_linux64.zip
 
 **Para Win User**
 
