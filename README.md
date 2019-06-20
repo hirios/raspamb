@@ -1,6 +1,6 @@
 # INSTALAÇÃO 
 
-**Primeiramente clone o repositório usando:**
+**1) Primeiramente clone o repositório usando:**
 
 $ git clone https://github.com/amaimonrios/raspamb
 
@@ -10,7 +10,7 @@ $ cd raspamb
 Obs: Você também pode baixar manualmente e extrair os arquivos para uma pasta
 
 
-**Instale as dependências:**
+**-Instale as dependências:**
 
 $ pip install -r requirements.txt
 
