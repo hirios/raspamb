@@ -2,7 +2,7 @@
 
 **1) Primeiramente clone o repositório usando:**
 
-$ git clone https://github.com/amaimonrios/raspamb
+$ git clone https://github.com/hirios/raspamb
 
 $ cd raspamb
 
