@@ -18,9 +18,7 @@ def retorno():
 
     # epi = data.find_all("td", {'class': 'epi'})
 
-
     le = len(dat)
-
 
     lista = []
 
@@ -28,7 +26,6 @@ def retorno():
     for c in range(0, le):
         d = dat[c].text
         lista.append(str(d).lower())
-
 
     erro = []
     num_do_anime = []
@@ -86,7 +83,6 @@ def retorno():
             print()
 
 
-
     print('Capturando links dos episódios...')
 
     driver = webdriver.Chrome()
@@ -118,11 +114,18 @@ def retorno():
 
     print()
     print()
-
-
+    
     while True:
+
         numero_episodio_pra_baixar = int(input('Número do episódio: '))
-        link_escolhido = lista_links[numero_episodio_pra_baixar - 1]
+        try:
+            link_escolhido = lista_links[numero_episodio_pra_baixar - 1]
+        except:
+            print('''!!!! Atenção !!!!
+Erro no número''')
+            
+            retorno()                        
+
         driver.get(link_escolhido)
         id = driver.page_source
         # driver.close()
@@ -134,3 +137,6 @@ def retorno():
         picotado = str(link_escolhido).split('/')
         driver.get(f'https://{picotado[2]}{zip}')
 retorno()
+
+
+
