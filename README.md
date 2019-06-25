@@ -34,7 +34,7 @@ Esse driver usará o navegador chrome, mas existem outros drivers para outros na
 
 # Uso
 
-Dentro da pasta onde está o raspamb.py e o chromedrive de o seguinte comando:
+Dentro da pasta onde está o `raspamb.py` e o chromedrive dê o seguinte comando:
 
 ```$ python raspamb.py```
 
