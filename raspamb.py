@@ -4,13 +4,15 @@ from selenium import webdriver
 import os
 
 def retorno():
+    print('A execução do código pode demorar de acordo com a internet')
     url = 'https://www.anbient.com/anime/lista'
 
-    html = urlopen(url) # Demora
+    html = urlopen(url)
 
     bs = BeautifulSoup(html, 'html.parser')
 
     data = bs.find(class_="list")
+
 
     dat = data.find_all("a")
 
@@ -45,7 +47,8 @@ def retorno():
                 num_do_anime_final = len(num_do_anime)
                 tv_anbient.append(tv[c].get('href'))
 
-                if len(erro) > 0:
+                cont_erro = len(erro)
+                if cont_erro > 0:
                     print(f'[{num_do_anime_final}] {lista[c].title()}')
                 # else:
                 #     print(erro[0])
@@ -100,7 +103,6 @@ def retorno():
         if fim != -1:
             lista_links.append(txt[c])
     if len(lista_links) == 0:
-        print()
         print('Provavelmente o serviço de download zippyshare não está disponível')
         return
 
@@ -109,16 +111,19 @@ def retorno():
 
 
     while True:
-
-        numero_episodio_pra_baixar = int(input('Número do episódio: '))
-        try:
-            link_escolhido = lista_links[numero_episodio_pra_baixar - 1]
-        except:
-            print('''!!!! Atenção !!!!
-Erro no número''')
-            
-            retorno()                        
-
+        
+        while True:
+            try:
+                numero_episodio_pra_baixar = int(input('Número do episódio(-1 para sair): '))
+                #TODO Terminar verificação do numero do episodio
+                if numero_episodio_pra_baixar == -1:
+                    return
+                else:
+                    link_escolhido = lista_links[numero_episodio_pra_baixar - 1]
+                break
+            except ValueError:
+                print('''!!!! Atenção !!!! Erro no número''')
+                
         driver.get(link_escolhido)
         id = driver.page_source
         # driver.close()
@@ -128,8 +133,6 @@ Erro no número''')
         zip = zip_link[0].get('href')
 
         picotado = str(link_escolhido).split('/')
-        driver.get('https://{picotado[2]}{zip}')
+        driver.get('https://{}{}'.format(picotado[2], zip))
 
 retorno()
-
-
