@@ -1,12 +1,12 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from selenium import webdriver
-
+import os
 
 def retorno():
     url = 'https://www.anbient.com/anime/lista'
 
-    html = urlopen(url)
+    html = urlopen(url) # Demora
 
     bs = BeautifulSoup(html, 'html.parser')
 
@@ -18,12 +18,9 @@ def retorno():
 
     # epi = data.find_all("td", {'class': 'epi'})
 
-    le = len(dat)
-
     lista = []
 
-
-    for c in range(0, le):
+    for c in range(0, len(dat)):
         d = dat[c].text
         lista.append(str(d).lower())
 
@@ -52,42 +49,41 @@ def retorno():
                     print(f'[{num_do_anime_final}] {lista[c].title()}')
                 # else:
                 #     print(erro[0])
-        print()
 
-        cont_erro = len(erro)
-        if cont_erro > 0:
-            pass
-        else:
+        if len(erro) == 0:
             print('Certifique-se que o nome está correto!')
             print()
 
 
-    select_anime = len(tv_anbient)
     lista_numero_animes = []
 
-    for animeszinhos in range(0, select_anime):
+    for animeszinhos in range(0, len(tv_anbient)):
         lista_numero_animes.append(animeszinhos)
-
 
     while True:
         try:
             numero = int(input('Digite um número: '))
-            if numero - 1 in lista_numero_animes:
-                link = f'https://www.anbient.com{tv_anbient[numero - 1]}'
+            if (numero - 1) in lista_numero_animes:
+                link = 'https://www.anbient.com{}'.format(tv_anbient[numero - 1])
+                print(link)
                 break
             else:
-                print()
                 print('!!!!Atenção!!!! \nTalvez tenha digitado um numero errado')
-        except:
+        except ValueError:
             print('!!!!! USE APENAS NUMEROS !!!!!!')
-            print()
-
+        except Exception as e:
+            print('Tem outra coisa dando bosta aq')
+            print(e)
 
     print('Capturando links dos episódios...')
 
-    driver = webdriver.Chrome()
-
-    driver.get(link)
+    try:
+        localDriver = os.getcwd() + '/chromedriver'
+        driver = webdriver.Chrome(localDriver)
+        driver.get(link)
+    except WebDriverExeption as e:
+        print('Nao foi possivel acessar o driver!')
+        return
 
     ids = driver.page_source
 
@@ -97,24 +93,21 @@ def retorno():
 
     txt = str(busc).split('"')
 
-    contar_lista_txt = len(txt)
-
     lista_links = []
-    for c in range(0, contar_lista_txt):
+
+    for c in range(0, len(txt)):
         fim = txt[c].find('zippyshare.com')
         if fim != -1:
             lista_links.append(txt[c])
     if len(lista_links) == 0:
         print()
         print('Provavelmente o serviço de download zippyshare não está disponível')
-        retorno()
+        return
 
     for empilhados in range(0, len(lista_links)):
         print(f'[{empilhados + 1}] {lista_links[empilhados]}')
 
-    print()
-    print()
-    
+
     while True:
 
         numero_episodio_pra_baixar = int(input('Número do episódio: '))
@@ -135,8 +128,8 @@ Erro no número''')
         zip = zip_link[0].get('href')
 
         picotado = str(link_escolhido).split('/')
-        driver.get(f'https://{picotado[2]}{zip}')
-retorno()
+        driver.get('https://{picotado[2]}{zip}')
 
+retorno()
 
 
