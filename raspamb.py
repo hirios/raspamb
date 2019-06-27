@@ -81,7 +81,10 @@ for animeszinhos in range(0, len(tv_anbient)):
 
 while True:
     try:
-        numero = int(input('Digite um número: '))
+        numero = int(input('Digite um número(-1 para sair): '))
+        if numero == -1:
+            print('Saindo')
+            exit()
         if (numero - 1) in lista_numero_animes:
             link = 'https://www.anbient.com{}'.format(tv_anbient[numero - 1])
             # print(link)
@@ -111,10 +114,10 @@ soup = BeautifulSoup(ids, 'html.parser')
 
 busc = soup.find_all("li")
 
+#txt tem uma parte do html que contem tbm os links dos animes
 txt = str(busc).split('"')
-
 lista_links = []
-print(txt)
+
 for c in range(0, len(txt)):
     fim = txt[c].find('zippyshare.com')
     if fim != -1:
