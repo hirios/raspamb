@@ -5,20 +5,15 @@ from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 import os
 
-def localizar_driver():
-    try:
-        if os.path.isfile('chromedriver'):
-            if os.name == 'posix':
-                return webdriver.Chrome(os.getcwd() + '/chromedriver')
-            elif os.name == 'nt':
-                return seleium_exceptions.Chrome(os.getcwd() + '\chromedriver')
-        else:
-            print('Nao encontrei o driver na mesma pasta do arquivo\nTentarei pela path do sistema')
-            return webdriver.Chrome()
-    except WebDriverException as e:
-        print('Ocorreu um erro no localizar_driver()')
-        print(e)
-
+def localizar_driver():        
+    webdriver.Chrome().quit()
+    if webdriver is not None:
+        print('Seu driver foi encontrado')
+    else:
+        print('Você não está utilizando nenhum driver')
+        print('Saindo...')
+        exit()
+        
 
 print('A execução do código pode demorar de acordo com a internet')
 url = 'https://www.anbient.com/anime/lista'
@@ -98,12 +93,11 @@ print('Capturando links dos episódios...')
 
 try:
     print('Recomenda-se que o chromedriver esteja na mesma pasta que este script')
-    driver = localizar_driver()
-    print('Driver localizando, abrindo a pagina')
+    localizar_driver()
+    driver = webdriver.Chrome()
     driver.get(link)
-except WebDriverException as e:
-    print('Nao foi possivel acessar o driver!')
-    print(e)
+except:
+    None
 
 ids = driver.page_source
 
