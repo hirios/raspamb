@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from selenium import webdriver
@@ -41,7 +42,7 @@ for c in range(0, len(dat)):
     d = dat[c].text
     lista.append(str(d).lower())
 
-erro = []
+list_animes = []
 num_do_anime = []
 tv_anbient = []
 
@@ -49,28 +50,29 @@ cont_erro = 0
 while cont_erro == 0:
     anime = input('Nome do anime: ').lower().strip()
     
-    erro = []
+    list_animes = []
     num_do_anime = []
     tv_anbient = []
 
     for c in range(0, len(lista)):
         names = lista[c].find(anime)
         if names != (-1):
-            erro.append(lista[c])
+            list_animes.append(lista[c])
             num_do_anime.append(c)
             num_do_anime_final = len(num_do_anime)
             tv_anbient.append(tv[c].get('href'))
 
-            cont_erro = len(erro)
+            cont_erro = len(list_animes)
             if cont_erro > 0:
                 print(f'[{num_do_anime_final}] {lista[c].title()}')
             # else:
             #     print(erro[0])
 
-    if len(erro) == 0:
+    if len(list_animes) == 0:
         print('Certifique-se que o nome está correto!')
         print()
 
+print(list_animes)
 
 lista_numero_animes = []
 
