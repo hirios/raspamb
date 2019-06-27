@@ -2,7 +2,7 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from selenium import webdriver
-from selenium.common import exceptions as seleium_exceptions
+from selenium.common.exceptions import WebDriverException
 import os
 
 def localizar_driver():
@@ -15,7 +15,7 @@ def localizar_driver():
         else:
             print('Nao encontrei o driver na mesma pasta do arquivo\nTentarei pela path do sistema')
             return webdriver.Chrome()
-    except exceptions.WebDriverException as e:
+    except WebDriverException as e:
         print('Ocorreu um erro no localizar_driver()')
         print(e)
 
@@ -101,7 +101,7 @@ try:
     driver = localizar_driver()
     print('Driver localizando, abrindo a pagina')
     driver.get(link)
-except seleium_exceptions.WebDriverException as e:
+except WebDriverException as e:
     print('Nao foi possivel acessar o driver!')
     print(e)
 
@@ -114,7 +114,7 @@ busc = soup.find_all("li")
 txt = str(busc).split('"')
 
 lista_links = []
-
+print(txt)
 for c in range(0, len(txt)):
     fim = txt[c].find('zippyshare.com')
     if fim != -1:
