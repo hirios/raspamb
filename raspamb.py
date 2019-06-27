@@ -5,15 +5,16 @@ from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 import os
 
-def localizar_driver():        
-    webdriver.Chrome().quit()
-    if webdriver is not None:
+
+def localizar_driver():
+    try:
+        webdriver.Chrome().quit()
         print('Seu driver foi encontrado')
-    else:
+    except:
         print('Você não está utilizando nenhum driver')
         print('Saindo...')
         exit()
-        
+
 
 print('A execução do código pode demorar de acordo com a internet')
 url = 'https://www.anbient.com/anime/lista'
@@ -23,7 +24,6 @@ html = urlopen(url)
 bs = BeautifulSoup(html, 'html.parser')
 
 data = bs.find(class_="list")
-
 
 dat = data.find_all("a")
 
@@ -44,7 +44,7 @@ tv_anbient = []
 cont_erro = 0
 while cont_erro == 0:
     anime = input('Nome do anime: ').lower().strip()
-    
+
     list_animes = []
     num_do_anime = []
     tv_anbient = []
@@ -91,13 +91,10 @@ while True:
 
 print('Capturando links dos episódios...')
 
-try:
-    print('Recomenda-se que o chromedriver esteja na mesma pasta que este script')
-    localizar_driver()
-    driver = webdriver.Chrome()
-    driver.get(link)
-except:
-    None
+print('Recomenda-se que o chromedriver esteja na mesma pasta que este script')
+localizar_driver()
+driver = webdriver.Chrome()
+driver.get(link)
 
 ids = driver.page_source
 
@@ -120,13 +117,12 @@ if len(lista_links) == 0:
 for empilhados in range(0, len(lista_links)):
     print(f'[{empilhados + 1}] {lista_links[empilhados]}')
 
-
 while True:
-        
+
     while True:
         try:
             numero_episodio_pra_baixar = int(input('Número do episódio(-1 para sair): '))
-            #TODO Terminar verificação do numero do episodio
+            # TODO Terminar verificação do numero do episodio
             if numero_episodio_pra_baixar == -1:
                 print('Saindo')
                 driver.close()
@@ -137,7 +133,7 @@ while True:
         except ValueError:
             print('''!!!! Atenção !!!! Erro no número''')
 
-    print('Iniciando o download')  
+    print('Iniciando o download')
     driver.get(link_escolhido)
     id = driver.page_source
     # driver.close()
