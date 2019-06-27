@@ -1,7 +1,23 @@
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from selenium import webdriver
+from selenium.common import exceptions as seleium_exceptions
 import os
+
+def localizar_driver():
+    try:
+        if os.path.isfile('chromedriver'):
+            if os.name == 'posix':
+                return webdriver.Chrome(os.getcwd() + '/chromedriver')
+            elif os.name == 'nt':
+                return seleium_exceptions.Chrome(os.getcwd() + '\chromedriver')
+        else:
+            print('Nao encontrei o driver na mesma pasta do arquivo\nTentarei pela path do sistema')
+            return webdriver.Chrome()
+    except exceptions.WebDriverException as e:
+        print('Ocorreu um erro no localizar_driver()')
+        print(e)
+
 
 print('A execução do código pode demorar de acordo com a internet')
 url = 'https://www.anbient.com/anime/lista'
@@ -79,13 +95,13 @@ while True:
 print('Capturando links dos episódios...')
 
 try:
-    localDriver = os.getcwd() + '/chromedriver'
-    driver = webdriver.Chrome(localDriver)
-    print('Pegou')
+    print('Recomenda-se que o chromedriver esteja na mesma pasta que este script')
+    driver = localizar_driver()
+    print('Driver localizando, abrindo a pagina')
     driver.get(link)
-except WebDriverExeption as e:
+except seleium_exceptions.WebDriverException as e:
     print('Nao foi possivel acessar o driver!')
-    exit()
+    print(e)
 
 ids = driver.page_source
 
@@ -116,6 +132,8 @@ while True:
             numero_episodio_pra_baixar = int(input('Número do episódio(-1 para sair): '))
             #TODO Terminar verificação do numero do episodio
             if numero_episodio_pra_baixar == -1:
+                print('Saindo')
+                driver.close()
                 exit()
             else:
                 link_escolhido = lista_links[numero_episodio_pra_baixar - 1]
