@@ -33,7 +33,7 @@ dat = data.find_all("a")
 
 tv = data.find_all("a", href=True)
 
-# epi = data.find_all("td", {'class': 'epi'})
+# epi = data.find_all("td", {'class':  'epi'})
 
 lista = []
 
