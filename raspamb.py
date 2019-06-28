@@ -5,17 +5,25 @@ from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 import os
 
-
 def localizar_driver():
     try:
-        #Executa o chromedriver localizado na mesma pasta que o script
-        driver = webdriver.Chrome(executable_path = os.getcwd() + '\chromedriver.exe')
-        print('Seu driver foi encontrado')
+        if os.path.isfile('chromedriver') or os.path.isfile('chromedriver.exe'):
+            if os.name == 'posix':
+                # Retorna o driver nos sistas operacionais posix(ubuntu, etc...)
+                return webdriver.Chrome(os.getcwd() + '/chromedriver')
+            elif os.name == 'nt':
+                # Retorna o driver no sistema operacional windows 
+                return webdriver.Chrome(executable_path = os.getcwd() + '\chromedriver.exe')
+            else:
+                print('Sistema operacional, não reconhecido.')
+                print('Envie o resultado abaixo para os desenvolvedores em https://github.com/hirios/raspamb/') 
+                print(os.name)
+        else:
+            print('Nao encontrei o driver na mesma pasta do arquivo\nTentarei pela path do sistema')
+            return webdriver.Chrome()
     except WebDriverException as e:
-        print('Você não está utilizando nenhum driver')
-        print('Saindo...')
+        print('Ocorreu um erro no localizar_driver()')
         print(e)
-        exit()
 
 
 print('A execução do código pode demorar de acordo com a internet')
