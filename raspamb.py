@@ -8,11 +8,13 @@ import os
 
 def localizar_driver():
     try:
-        webdriver.Chrome().quit()
+        #Executa o chromedriver localizado na mesma pasta que o script
+        driver = webdriver.Chrome(executable_path = os.getcwd() + '\chromedriver.exe')
         print('Seu driver foi encontrado')
-    except:
+    except WebDriverException as e:
         print('Você não está utilizando nenhum driver')
         print('Saindo...')
+        print(e)
         exit()
 
 
@@ -92,8 +94,8 @@ while True:
 print('Capturando links dos episódios...')
 
 print('Recomenda-se que o chromedriver esteja na mesma pasta que este script')
-localizar_driver()
-driver = webdriver.Chrome()
+
+driver = localizar_driver()
 driver.get(link)
 
 ids = driver.page_source
