@@ -18,12 +18,14 @@ def localizar_driver():
                 print('Sistema operacional, não reconhecido.')
                 print('Envie o resultado abaixo para os desenvolvedores em https://github.com/hirios/raspamb/') 
                 print(os.name)
+                exit()
         else:
             print('Nao encontrei o driver na mesma pasta do arquivo\nTentarei pela path do sistema')
             return webdriver.Chrome()
     except WebDriverException as e:
         print('Ocorreu um erro no localizar_driver()')
         print(e)
+        exit()
 
 
 print('A execução do código pode demorar de acordo com a internet')
