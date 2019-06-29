@@ -27,6 +27,21 @@ def localizar_driver():
         print(e)
         exit()
 
+def links_zippyshare():
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    # Busca optimizada, retorna uma div com todos os links de todas fontes de download
+    busc = soup.find_all('div', class_='servidores-wrapper')
+    # txt tem uma parte do html que contem tbm os links dos animes
+    txt = str(soup.find_all("li")).split('"')
+    lista_links = []
+    for c in range(0, len(txt)):
+        fim = txt[c].find('zippyshare.com')
+        if fim != -1:
+            lista_links.append(txt[c])
+    if len(lista_links) == 0:
+        print('Provavelmente o serviço de download zippyshare não está disponível')
+        exit()
+    return lista_links
 
 print('A execução do código pode demorar de acordo com a internet')
 url = 'https://www.anbient.com/anime/lista'
@@ -111,21 +126,7 @@ print('Recomenda-se que o chromedriver esteja na mesma pasta que este script')
 driver = localizar_driver()
 driver.get(link)
 
-soup = BeautifulSoup(driver.page_source, 'html.parser')
-busc = soup.find_all("li")
-
-#txt tem uma parte do html que contem tbm os links dos animes
-txt = str(soup.find_all("li")).split('"')
-print(txt)
-lista_links = []
-
-for c in range(0, len(txt)):
-    fim = txt[c].find('zippyshare.com')
-    if fim != -1:
-        lista_links.append(txt[c])
-if len(lista_links) == 0:
-    print('Provavelmente o serviço de download zippyshare não está disponível')
-    exit()
+lista_links = links_zippyshare()
 
 for i in range(0, len(lista_links)):
     print(f'[{i + 1}] {lista_links[i]}')
@@ -154,6 +155,5 @@ while True:
     sopa = BeautifulSoup(id, 'html.parser')
     zip_link = sopa.find_all("a", id=True)
     zip = zip_link[0].get('href')
-
     picotado = str(link_escolhido).split('/')
     driver.get('https://{}{}'.format(picotado[2], zip))
