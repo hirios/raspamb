@@ -6,26 +6,21 @@ from selenium.common.exceptions import WebDriverException
 import os
 
 def localizar_driver():
-    try:
-        if os.path.isfile('chromedriver') or os.path.isfile('chromedriver.exe'):
-            if os.name == 'posix':
-                # Retorna o driver nos sistas operacionais posix(ubuntu, etc...)
-                return webdriver.Chrome(os.getcwd() + '/chromedriver')
-            elif os.name == 'nt':
-                # Retorna o driver no sistema operacional windows 
-                return webdriver.Chrome(executable_path = os.getcwd() + '\chromedriver.exe')
-            else:
-                print('Sistema operacional, não reconhecido.')
-                print('Envie o resultado abaixo para os desenvolvedores em https://github.com/hirios/raspamb/') 
-                print(os.name)
-                exit()
+    if os.path.isfile('chromedriver') or os.path.isfile('chromedriver.exe'):
+        if os.name == 'posix':
+            # Retorna o driver nos sistas operacionais posix(ubuntu, etc...)
+            return webdriver.Chrome(os.getcwd() + '/chromedriver')
+        elif os.name == 'nt':
+            # Retorna o driver no sistema operacional windows 
+            return webdriver.Chrome(executable_path = os.getcwd() + '\chromedriver.exe')
         else:
-            print('Nao encontrei o driver na mesma pasta do arquivo\nTentarei pela path do sistema')
-            return webdriver.Chrome()
-    except WebDriverException as e:
-        print('Ocorreu um erro no localizar_driver()')
-        print(e)
-        exit()
+            print('Sistema operacional, não reconhecido.')
+            print('Envie o resultado abaixo para os desenvolvedores em https://github.com/hirios/raspamb/') 
+            print(os.name)
+            exit()
+    else:
+        print('Nao encontrei o driver na mesma pasta do arquivo\nTentarei pela path do sistema')
+        return webdriver.Chrome()
 
 def links_zippyshare():
     soup = BeautifulSoup(driver.page_source, 'html.parser')
@@ -64,10 +59,6 @@ for c in range(0, len(dat)):
     d = dat[c].text
     lista.append(str(d).lower())
 
-list_animes = []
-num_do_anime = []
-tv_anbient = []
-
 cont_erro = 0
 while cont_erro == 0:
     anime = input('Nome do anime: ').lower().strip()
@@ -87,14 +78,10 @@ while cont_erro == 0:
             cont_erro = len(list_animes)
             if cont_erro > 0:
                 print(f'[{num_do_anime_final}] {lista[c].title()}')
-            # else:
-            #     print(erro[0])
 
     if len(list_animes) == 0:
         print('Certifique-se que o nome está correto!')
         print()
-
-print(list_animes)
 
 lista_numero_animes = []
 
@@ -106,6 +93,7 @@ while True:
         numero = int(input('Digite um número(-1 para sair): '))
         if numero == -1:
             print('Saindo')
+            driver.close()
             exit()
         if (numero - 1) in lista_numero_animes:
             link = 'https://www.anbient.com{}'.format(tv_anbient[numero - 1])
@@ -123,8 +111,13 @@ print('Capturando links dos episódios...')
 
 print('Recomenda-se que o chromedriver esteja na mesma pasta que este script')
 
-driver = localizar_driver()
-driver.get(link)
+try:
+    driver = localizar_driver()
+    driver.get(link)
+except WebDriverException as e:
+    print('Ocorreu um erro')
+    print(e)
+    exit()
 
 lista_links = links_zippyshare()
 
@@ -135,14 +128,13 @@ while True:
 
     while True:
         try:
-            numero_episodio_pra_baixar = int(input('Número do episódio(-1 para sair): '))
-            # TODO Terminar verificação do numero do episodio
-            if numero_episodio_pra_baixar == -1:
+            numero_episodio = int(input('Número do episódio(-1 para sair): '))
+            if numero_episodio == -1:
                 print('Saindo')
                 driver.close()
                 exit()
             else:
-                link_escolhido = lista_links[numero_episodio_pra_baixar - 1]
+                link_escolhido = lista_links[numero_episodio - 1]
             break
         except ValueError:
             print('''!!!! Atenção !!!! Erro no número''')
@@ -153,7 +145,11 @@ while True:
     # driver.close()
 
     sopa = BeautifulSoup(id, 'html.parser')
+    # print(sopa)
     zip_link = sopa.find_all("a", id=True)
+    # print(zip_link)
     zip = zip_link[0].get('href')
     picotado = str(link_escolhido).split('/')
+    # print(picotado)
+    # print(zip)
     driver.get('https://{}{}'.format(picotado[2], zip))
