@@ -108,14 +108,12 @@ except WebDriverException as e:
     print('Nao foi possivel acessar o driver!')
     print(e)
 
-ids = driver.page_source
-
-soup = BeautifulSoup(ids, 'html.parser')
-
+soup = BeautifulSoup(driver.page_source, 'html.parser')
 busc = soup.find_all("li")
 
 #txt tem uma parte do html que contem tbm os links dos animes
-txt = str(busc).split('"')
+txt = str(soup.find_all("li")).split('"')
+print(txt)
 lista_links = []
 
 for c in range(0, len(txt)):
@@ -126,8 +124,8 @@ if len(lista_links) == 0:
     print('Provavelmente o serviço de download zippyshare não está disponível')
     exit()
 
-for empilhados in range(0, len(lista_links)):
-    print(f'[{empilhados + 1}] {lista_links[empilhados]}')
+for i in range(0, len(lista_links)):
+    print(f'[{i + 1}] {lista_links[i]}')
 
 
 while True:
