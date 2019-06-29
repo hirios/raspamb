@@ -7,17 +7,25 @@ import os
 
 def localizar_driver():
     try:
-        if os.path.isfile('chromedriver'):
+        if os.path.isfile('chromedriver') or os.path.isfile('chromedriver.exe'):
             if os.name == 'posix':
+                # Retorna o driver nos sistas operacionais posix(ubuntu, etc...)
                 return webdriver.Chrome(os.getcwd() + '/chromedriver')
             elif os.name == 'nt':
-                return seleium_exceptions.Chrome(os.getcwd() + '\chromedriver')
+                # Retorna o driver no sistema operacional windows 
+                return webdriver.Chrome(executable_path = os.getcwd() + '\chromedriver.exe')
+            else:
+                print('Sistema operacional, não reconhecido.')
+                print('Envie o resultado abaixo para os desenvolvedores em https://github.com/hirios/raspamb/') 
+                print(os.name)
+                exit()
         else:
             print('Nao encontrei o driver na mesma pasta do arquivo\nTentarei pela path do sistema')
             return webdriver.Chrome()
     except WebDriverException as e:
         print('Ocorreu um erro no localizar_driver()')
         print(e)
+        exit()
 
 
 print('A execução do código pode demorar de acordo com a internet')
@@ -28,7 +36,6 @@ html = urlopen(url)
 bs = BeautifulSoup(html, 'html.parser')
 
 data = bs.find(class_="list")
-
 
 dat = data.find_all("a")
 
@@ -49,7 +56,7 @@ tv_anbient = []
 cont_erro = 0
 while cont_erro == 0:
     anime = input('Nome do anime: ').lower().strip()
-    
+
     list_animes = []
     num_do_anime = []
     tv_anbient = []
@@ -99,14 +106,10 @@ while True:
 
 print('Capturando links dos episódios...')
 
-try:
-    print('Recomenda-se que o chromedriver esteja na mesma pasta que este script')
-    driver = localizar_driver()
-    print('Driver localizando, abrindo a pagina')
-    driver.get(link)
-except WebDriverException as e:
-    print('Nao foi possivel acessar o driver!')
-    print(e)
+print('Recomenda-se que o chromedriver esteja na mesma pasta que este script')
+
+driver = localizar_driver()
+driver.get(link)
 
 soup = BeautifulSoup(driver.page_source, 'html.parser')
 busc = soup.find_all("li")
@@ -127,13 +130,12 @@ if len(lista_links) == 0:
 for i in range(0, len(lista_links)):
     print(f'[{i + 1}] {lista_links[i]}')
 
-
 while True:
-        
+
     while True:
         try:
             numero_episodio_pra_baixar = int(input('Número do episódio(-1 para sair): '))
-            #TODO Terminar verificação do numero do episodio
+            # TODO Terminar verificação do numero do episodio
             if numero_episodio_pra_baixar == -1:
                 print('Saindo')
                 driver.close()
@@ -144,7 +146,7 @@ while True:
         except ValueError:
             print('''!!!! Atenção !!!! Erro no número''')
 
-    print('Iniciando o download')  
+    print('Iniciando o download')
     driver.get(link_escolhido)
     id = driver.page_source
     # driver.close()
