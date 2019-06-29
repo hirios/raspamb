@@ -38,6 +38,6 @@ Dentro da pasta onde está o `raspamb.py` e o chromedrive dê o seguinte comando
 
 ```$ python raspamb.py```
 
-
-
+# Disclaimer
+Não somos responsavel por nenhuma das fontes de download utilizadas por esse código. Todas elas pertencendo ao ambient e não tendo nenhuma relação conosco.
 
