@@ -25,8 +25,6 @@ def localizar_driver():
 
 def links_zippyshare():
     soup = BeautifulSoup(driver.page_source, 'html.parser')
-    # Busca optimizada, retorna uma div com todos os links de todas fontes de download
-    # busc = soup.find_all('div', class_='servidores-wrapper')
     lista = []
     for link in soup.find_all(href=re.compile('zippyshare.com')):
         lista.append(link['href'])
