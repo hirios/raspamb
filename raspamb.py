@@ -4,6 +4,7 @@ from urllib.request import urlopen
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 import os
+import re
 
 def localizar_driver():
     if os.path.isfile('chromedriver') or os.path.isfile('chromedriver.exe'):
@@ -25,18 +26,11 @@ def localizar_driver():
 def links_zippyshare():
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     # Busca optimizada, retorna uma div com todos os links de todas fontes de download
-    busc = soup.find_all('div', class_='servidores-wrapper')
-    # txt tem uma parte do html que contem tbm os links dos animes
-    txt = str(soup.find_all("li")).split('"')
-    lista_links = []
-    for c in range(0, len(txt)):
-        fim = txt[c].find('zippyshare.com')
-        if fim != -1:
-            lista_links.append(txt[c])
-    if len(lista_links) == 0:
-        print('Provavelmente o serviço de download zippyshare não está disponível')
-        exit()
-    return lista_links
+    # busc = soup.find_all('div', class_='servidores-wrapper')
+    lista = []
+    for link in soup.find_all(href=re.compile('zippyshare.com')):
+        lista.append(link['href'])
+    return lista
 
 print('A execução do código pode demorar de acordo com a internet')
 url = 'https://www.anbient.com/anime/lista'
@@ -93,7 +87,6 @@ while True:
         numero = int(input('Digite um número(-1 para sair): '))
         if numero == -1:
             print('Saindo')
-            driver.close()
             exit()
         if (numero - 1) in lista_numero_animes:
             link = 'https://www.anbient.com{}'.format(tv_anbient[numero - 1])
@@ -145,11 +138,10 @@ while True:
     # driver.close()
 
     sopa = BeautifulSoup(id, 'html.parser')
-    # print(sopa)
+
     zip_link = sopa.find_all("a", id=True)
-    # print(zip_link)
+
     zip = zip_link[0].get('href')
     picotado = str(link_escolhido).split('/')
-    # print(picotado)
-    # print(zip)
+
     driver.get('https://{}{}'.format(picotado[2], zip))
