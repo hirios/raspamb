@@ -17,6 +17,7 @@ soup = BeautifulSoup(driver.page_source, 'html.parser')
 
 # busc = soup.find_all('div', class_='servidores-wrapper')
 
+lista_links = []
 for c in soup.find_all(href=re.compile('zippyshare.com')):
     lista_links.append(c['href'])
 

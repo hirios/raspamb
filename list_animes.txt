@@ -1,0 +1,4 @@
+['/TV/Accel-World', 
+'/ovas/accel-world-ex', 
+'/anime/accel-world-infiniteburst', 
+'/anime/toaru-kagaku-no-accelerator']

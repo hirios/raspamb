@@ -34,11 +34,9 @@ print('A execução do código pode demorar de acordo com a internet')
 url = 'https://www.anbient.com/anime/lista'
 
 html = urlopen(url)
-
 bs = BeautifulSoup(html, 'html.parser')
 
 data = bs.find(class_="list")
-
 dat = data.find_all("a")
 
 tv = data.find_all("a", href=True)
@@ -52,33 +50,29 @@ for c in range(0, len(dat)):
     lista.append(str(d).lower())
 
 cont_erro = 0
+list_animes = []
+tv_anbient = []
 while cont_erro == 0:
     anime = input('Nome do anime: ').lower().strip()
-
-    list_animes = []
-    num_do_anime = []
-    tv_anbient = []
 
     for c in range(0, len(lista)):
         names = lista[c].find(anime)
         if names != (-1):
             list_animes.append(lista[c])
-            num_do_anime.append(c)
-            num_do_anime_final = len(num_do_anime)
             tv_anbient.append(tv[c].get('href'))
-
             cont_erro = len(list_animes)
-            if cont_erro > 0:
-                print(f'[{num_do_anime_final}] {lista[c].title()}')
-
     if len(list_animes) == 0:
         print('Certifique-se que o nome está correto!')
-        print()
+
+# Imprime a lista de animes
+for i in range(0, len(list_animes)):
+    print(f'[{i + 1}] {list_animes[i]}')
 
 lista_numero_animes = []
 
-for animeszinhos in range(0, len(tv_anbient)):
-    lista_numero_animes.append(animeszinhos)
+# arq = open('list_animes.txt','w')
+# arq.write(str(tv_anbient))
+# arq.close()
 
 while True:
     try:
@@ -86,12 +80,12 @@ while True:
         if numero == -1:
             print('Saindo')
             exit()
-        if (numero - 1) in lista_numero_animes:
+        if (numero - 1) < len(list_animes):
             link = 'https://www.anbient.com{}'.format(tv_anbient[numero - 1])
             # print(link)
             break
         else:
-            print('!!!!Atenção!!!! \nTalvez tenha digitado um numero errado')
+            print('Episódio não encontrado!!\n')
     except ValueError:
         print('!!!!! USE APENAS NUMEROS !!!!!!')
     except Exception as e:
@@ -112,11 +106,12 @@ except WebDriverException as e:
 
 lista_links = links_zippyshare()
 
+# Imprime a lista de animes
 for i in range(0, len(lista_links)):
     print(f'[{i + 1}] {lista_links[i]}')
 
 while True:
-
+    # Le o numero do episódio que ira baixar
     while True:
         try:
             numero_episodio = int(input('Número do episódio(-1 para sair): '))
@@ -124,22 +119,21 @@ while True:
                 print('Saindo')
                 driver.close()
                 exit()
+            elif numero_episodio <= len(lista_links):
+                link = lista_links[numero_episodio - 1]
+                break
             else:
-                link_escolhido = lista_links[numero_episodio - 1]
-            break
+                print('Episódio invalido, escolha um numero entre 1 e {}'.format(len(lista_links)))
         except ValueError:
             print('''!!!! Atenção !!!! Erro no número''')
 
     print('Iniciando o download')
-    driver.get(link_escolhido)
-    id = driver.page_source
-    # driver.close()
-
-    sopa = BeautifulSoup(id, 'html.parser')
+    driver.get(link)
+    sopa = BeautifulSoup(driver.page_source, 'html.parser')
 
     zip_link = sopa.find_all("a", id=True)
 
     zip = zip_link[0].get('href')
-    picotado = str(link_escolhido).split('/')
+    picotado = str(link).split('/')
 
     driver.get('https://{}{}'.format(picotado[2], zip))
