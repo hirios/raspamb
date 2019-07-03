@@ -49,10 +49,10 @@ for c in range(0, len(dat)):
     d = dat[c].text
     lista.append(str(d).lower())
 
-cont_erro = 0
+quantidade_anime = 0
 list_animes = []
 tv_anbient = []
-while cont_erro == 0:
+while quantidade_anime == 0:
     anime = input('Nome do anime: ').lower().strip()
 
     for c in range(0, len(lista)):
@@ -60,7 +60,7 @@ while cont_erro == 0:
         if names != (-1):
             list_animes.append(lista[c])
             tv_anbient.append(tv[c].get('href'))
-            cont_erro = len(list_animes)
+            quantidade_anime = len(list_animes)
     if len(list_animes) == 0:
         print('Certifique-se que o nome está correto!')
 
