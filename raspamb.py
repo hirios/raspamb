@@ -85,7 +85,7 @@ while True:
             # print(link)
             break
         else:
-            print('Episódio não encontrado!!\n')
+            print('Numero invalido!!!\n')
     except ValueError:
         print('!!!!! USE APENAS NUMEROS !!!!!!')
     except Exception as e:
