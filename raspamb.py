@@ -29,8 +29,10 @@ def links_zippyshare():
     for link in soup.find_all(href=re.compile('zippyshare.com')):
         lista.append(link['href'])
     return lista
+    
 
 print('A execução do código pode demorar de acordo com a internet')
+print()
 url = 'https://www.anbient.com/anime/lista'
 
 html = urlopen(url)
@@ -67,6 +69,8 @@ while quantidade_anime == 0:
 # Imprime a lista de animes
 for i in range(0, len(list_animes)):
     print(f'[{i + 1}] {list_animes[i]}')
+print()    
+    
 
 lista_numero_animes = []
 
@@ -76,7 +80,7 @@ lista_numero_animes = []
 
 while True:
     try:
-        numero = int(input('Digite um número(-1 para sair): '))
+        numero = int(input('Digite um número (-1 para sair): '))
         if numero == -1:
             print('Saindo')
             exit()
@@ -114,7 +118,7 @@ while True:
     # Le o numero do episódio que ira baixar
     while True:
         try:
-            numero_episodio = int(input('Número do episódio(-1 para sair): '))
+            numero_episodio = int(input('Número do episódio (-1 para sair): '))
             if numero_episodio == -1:
                 print('Saindo')
                 driver.close()
