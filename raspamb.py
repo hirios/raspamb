@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from bs4 import BeautifulSoup
 from urllib.request import urlopen
 from selenium import webdriver
@@ -6,30 +5,33 @@ from selenium.common.exceptions import WebDriverException
 import os
 import re
 
+
 def localizar_driver():
     if os.path.isfile('chromedriver') or os.path.isfile('chromedriver.exe'):
         if os.name == 'posix':
             # Retorna o driver nos sistas operacionais posix(ubuntu, etc...)
             return webdriver.Chrome(os.getcwd() + '/chromedriver')
         elif os.name == 'nt':
-            # Retorna o driver no sistema operacional windows 
-            return webdriver.Chrome(executable_path = os.getcwd() + '\chromedriver.exe')
+            # Retorna o driver no sistema operacional windows
+            return webdriver.Chrome(executable_path=os.getcwd() + '\chromedriver.exe')
         else:
             print('Sistema operacional, não reconhecido.')
-            print('Envie o resultado abaixo para os desenvolvedores em https://github.com/hirios/raspamb/') 
+            print('Envie o resultado abaixo para os desenvolvedores em https://github.com/hirios/raspamb/')
             print(os.name)
             exit()
     else:
         print('Nao encontrei o driver na mesma pasta do arquivo\nTentarei pela path do sistema')
         return webdriver.Chrome()
 
+
 def links_zippyshare():
     soup = BeautifulSoup(driver.page_source, 'html.parser')
+    global lista
     lista = []
     for link in soup.find_all(href=re.compile('zippyshare.com')):
         lista.append(link['href'])
     return lista
-    
+
 
 print('A execução do código pode demorar de acordo com a internet')
 print()
@@ -51,6 +53,103 @@ for c in range(0, len(dat)):
     d = dat[c].text
     lista.append(str(d).lower())
 
+
+def retornar_busca():
+    global driver
+    global list_animes
+
+    quantidade_anime = 0
+    list_animes = []
+    tv_anbient = []
+    while quantidade_anime == 0:
+        anime = input('Nome do anime: ').lower().strip()
+
+        for c in range(0, len(lista)):
+            names = lista[c].find(anime)
+            if names != (-1):
+                list_animes.append(lista[c])
+                tv_anbient.append(tv[c].get('href'))
+                quantidade_anime = len(list_animes)
+        if len(list_animes) == 0:
+            print('Certifique-se que o nome está correto!')
+            print()
+
+    # Imprime a lista de animes
+    for i in range(0, len(list_animes)):
+        print(f'[{i + 1}] {list_animes[i].title()}')
+    print()
+
+    lista_numero_animes = []
+
+    # arq = open('list_animes.txt','w')
+    # arq.write(str(tv_anbient))
+    # arq.close()
+
+    while True:
+        try:
+            numero = int(input('Digite um número (-1 para voltar): '))
+            if numero == -1:
+                retornar_busca()
+            if (numero - 1) < len(list_animes):
+                link = 'https://www.anbient.com{}'.format(tv_anbient[numero - 1])
+                # print(link)
+                break
+            else:
+                print('Numero invalido!!!\n')
+                print()
+        except ValueError:
+            print('!!!!! USE APENAS NUMEROS !!!!!!')
+            print()
+        except Exception as e:
+            print('Tem outra coisa dando bosta aq')
+            print(e)
+
+    print('Capturando links dos episódios...')
+
+    print('Recomenda-se que o chromedriver esteja na mesma pasta que este script')
+
+    try:
+        driver = localizar_driver()
+        driver.get(link)
+    except WebDriverException as e:
+        print('Ocorreu um erro')
+        print(e)
+        exit()
+
+    lista_links = links_zippyshare()
+
+    # Imprime a lista de animes
+    for i in range(0, len(lista_links)):
+        print(f'[{i + 1}] {lista_links[i]}')
+
+    while True:
+        # Le o numero do episódio que ira baixar
+        while True:
+            try:
+                numero_episodio = int(input('Número do episódio (-1 para voltar): '))
+                if numero_episodio == -1:
+                    retornar_busca()
+                elif numero_episodio <= len(lista_links):
+                    link = lista_links[numero_episodio - 1]
+                    break
+                else:
+                    print('Episódio invalido, escolha um numero entre 1 e {}'.format(len(lista_links)))
+            except ValueError:
+                print('''!!!! Atenção !!!! Erro no número''')
+
+        print('Iniciando o download')
+        print()
+        driver.get(link)
+        sopa = BeautifulSoup(driver.page_source, 'html.parser')
+
+        zip_link = sopa.find_all("a", id=True)
+
+        zip = zip_link[0].get('href')
+        picotado = str(link).split('/')
+
+        driver.get('https://{}{}'.format(picotado[2], zip))
+
+
 quantidade_anime = 0
 list_animes = []
 tv_anbient = []
@@ -65,12 +164,12 @@ while quantidade_anime == 0:
             quantidade_anime = len(list_animes)
     if len(list_animes) == 0:
         print('Certifique-se que o nome está correto!')
+        print()
 
 # Imprime a lista de animes
 for i in range(0, len(list_animes)):
     print(f'[{i + 1}] {list_animes[i]}')
-print()    
-    
+print()
 
 lista_numero_animes = []
 
@@ -80,10 +179,9 @@ lista_numero_animes = []
 
 while True:
     try:
-        numero = int(input('Digite um número (-1 para sair): '))
+        numero = int(input('Digite um número (-1 para voltar): '))
         if numero == -1:
-            print('Saindo')
-            exit()
+            retornar_busca()
         if (numero - 1) < len(list_animes):
             link = 'https://www.anbient.com{}'.format(tv_anbient[numero - 1])
             # print(link)
@@ -92,8 +190,9 @@ while True:
             print('Numero invalido!!!\n')
     except ValueError:
         print('!!!!! USE APENAS NUMEROS !!!!!!')
+        print()
     except Exception as e:
-        print('Tem outra coisa dando bosta aq')
+        print('Tem outra coisa dando errado aq')
         print(e)
 
 print('Capturando links dos episódios...')
@@ -118,11 +217,9 @@ while True:
     # Le o numero do episódio que ira baixar
     while True:
         try:
-            numero_episodio = int(input('Número do episódio (-1 para sair): '))
+            numero_episodio = int(input('Número do episódio (-1 para voltar): '))
             if numero_episodio == -1:
-                print('Saindo')
-                driver.close()
-                exit()
+                retornar_busca()
             elif numero_episodio <= len(lista_links):
                 link = lista_links[numero_episodio - 1]
                 break
@@ -132,6 +229,7 @@ while True:
             print('''!!!! Atenção !!!! Erro no número''')
 
     print('Iniciando o download')
+    print()
     driver.get(link)
     sopa = BeautifulSoup(driver.page_source, 'html.parser')
 
