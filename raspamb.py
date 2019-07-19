@@ -39,12 +39,9 @@ url = 'https://www.anbient.com/anime/lista'
 
 html = urlopen(url)
 bs = BeautifulSoup(html, 'html.parser')
-
 data = bs.find(class_="list")
 dat = data.find_all("a")
-
 tv = data.find_all("a", href=True)
-
 # epi = data.find_all("td", {'class':  'epi'})
 
 lista = []
@@ -53,11 +50,10 @@ for c in range(0, len(dat)):
     d = dat[c].text
     lista.append(str(d).lower())
 
-
 def retornar_busca():
     global driver
     global list_animes
-
+    
     quantidade_anime = 0
     list_animes = []
     tv_anbient = []
@@ -80,11 +76,6 @@ def retornar_busca():
     print()
 
     lista_numero_animes = []
-
-    # arq = open('list_animes.txt','w')
-    # arq.write(str(tv_anbient))
-    # arq.close()
-
     while True:
         try:
             numero = int(input('Digite um número (-1 para voltar): '))
@@ -105,7 +96,6 @@ def retornar_busca():
             print(e)
 
     print('Capturando links dos episódios...')
-
     print('Recomenda-se que o chromedriver esteja na mesma pasta que este script')
 
     try:
@@ -117,7 +107,6 @@ def retornar_busca():
         exit()
 
     lista_links = links_zippyshare()
-
     # Imprime a lista de animes
     for i in range(0, len(lista_links)):
         print(f'[{i + 1}] {lista_links[i]}')
@@ -141,12 +130,9 @@ def retornar_busca():
         print()
         driver.get(link)
         sopa = BeautifulSoup(driver.page_source, 'html.parser')
-
         zip_link = sopa.find_all("a", id=True)
-
         zip = zip_link[0].get('href')
         picotado = str(link).split('/')
-
         driver.get('https://{}{}'.format(picotado[2], zip))
 
 retornar_busca()
