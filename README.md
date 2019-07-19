@@ -22,7 +22,7 @@ $ sudo pip install -r requirements.txt
 **3) Download e extração do driver para Linux User que usam Google Chrome**
 
 ```
-$ wget https://chromedriver.storage.googleapis.com/74.0.3729.6/chromedriver_linux64.zip```
+$ wget https://chromedriver.storage.googleapis.com/74.0.3729.6/chromedriver_linux64.zip
 ```
 
 ```
