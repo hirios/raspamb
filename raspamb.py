@@ -26,11 +26,11 @@ def localizar_driver():
 
 def links_zippyshare():
     soup = BeautifulSoup(driver.page_source, 'html.parser')
-    global lista
-    lista = []
+    global lista_com_links
+    lista_com_links = []
     for link in soup.find_all(href=re.compile('zippyshare.com')):
-        lista.append(link['href'])
-    return lista
+        lista_com_links.append(link['href'])
+    return lista_com_links
 
 
 print('A execução do código pode demorar de acordo com a internet')
@@ -149,93 +149,5 @@ def retornar_busca():
 
         driver.get('https://{}{}'.format(picotado[2], zip))
 
+retornar_busca()
 
-quantidade_anime = 0
-list_animes = []
-tv_anbient = []
-while quantidade_anime == 0:
-    anime = input('Nome do anime: ').lower().strip()
-
-    for c in range(0, len(lista)):
-        names = lista[c].find(anime)
-        if names != (-1):
-            list_animes.append(lista[c])
-            tv_anbient.append(tv[c].get('href'))
-            quantidade_anime = len(list_animes)
-    if len(list_animes) == 0:
-        print('Certifique-se que o nome está correto!')
-        print()
-
-# Imprime a lista de animes
-for i in range(0, len(list_animes)):
-    print(f'[{i + 1}] {list_animes[i]}')
-print()
-
-lista_numero_animes = []
-
-# arq = open('list_animes.txt','w')
-# arq.write(str(tv_anbient))
-# arq.close()
-
-while True:
-    try:
-        numero = int(input('Digite um número (-1 para voltar): '))
-        if numero == -1:
-            retornar_busca()
-        if (numero - 1) < len(list_animes):
-            link = 'https://www.anbient.com{}'.format(tv_anbient[numero - 1])
-            # print(link)
-            break
-        else:
-            print('Numero invalido!!!\n')
-    except ValueError:
-        print('!!!!! USE APENAS NUMEROS !!!!!!')
-        print()
-    except Exception as e:
-        print('Tem outra coisa dando errado aq')
-        print(e)
-
-print('Capturando links dos episódios...')
-
-print('Recomenda-se que o chromedriver esteja na mesma pasta que este script')
-
-try:
-    driver = localizar_driver()
-    driver.get(link)
-except WebDriverException as e:
-    print('Ocorreu um erro')
-    print(e)
-    exit()
-
-lista_links = links_zippyshare()
-
-# Imprime a lista de animes
-for i in range(0, len(lista_links)):
-    print(f'[{i + 1}] {lista_links[i]}')
-
-while True:
-    # Le o numero do episódio que ira baixar
-    while True:
-        try:
-            numero_episodio = int(input('Número do episódio (-1 para voltar): '))
-            if numero_episodio == -1:
-                retornar_busca()
-            elif numero_episodio <= len(lista_links):
-                link = lista_links[numero_episodio - 1]
-                break
-            else:
-                print('Episódio invalido, escolha um numero entre 1 e {}'.format(len(lista_links)))
-        except ValueError:
-            print('''!!!! Atenção !!!! Erro no número''')
-
-    print('Iniciando o download')
-    print()
-    driver.get(link)
-    sopa = BeautifulSoup(driver.page_source, 'html.parser')
-
-    zip_link = sopa.find_all("a", id=True)
-
-    zip = zip_link[0].get('href')
-    picotado = str(link).split('/')
-
-    driver.get('https://{}{}'.format(picotado[2], zip))
