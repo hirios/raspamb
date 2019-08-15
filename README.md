@@ -45,4 +45,4 @@ $ python raspamb.py
 ```
 
 # Disclaimer
-Não somos responsavel pela utilização desse programa e nenhuma das fontes de download utilizadas por esse código. Todas elas pertencendo ao ambient e não tendo nenhuma relação conosco.
+Não somos responsáveis pela utilização desse programa e de nenhuma das fontes de download utilizadas por esse código. Todas elas pertencendo ao anbient e não tendo nenhuma relação conosco.
