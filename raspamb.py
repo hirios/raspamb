@@ -1,11 +1,24 @@
-from bs4 import BeautifulSoup
+try:
+    from bs4 import BeautifulSoup
+except:
+    try:
+        os.system("pip install bs4")
+    except:
+        os.system("sudo pip install bs4")
+
+try:
+    from selenium import webdriver
+except:
+    try:
+        os.system("pip install selenium")
+    except:
+        os.system("sudo pip install selenium")
+        
 from urllib.request import urlopen
-from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
+import requests
 import os
 import re
-import requests 
-import os
 
 
 def drive_download():
@@ -298,3 +311,4 @@ def retornar_busca():
         driver.get('https://{}{}'.format(picotado[2], zip))
 
 retornar_busca()
+
