@@ -25,7 +25,7 @@ import re
 def drive_download():
     version = requests.get("http://chromedriver.storage.googleapis.com/LATEST_RELEASE").text
     
-    if platforman.system() == "Windows":
+    if platform.system() == "Windows":
         zipp = requests.get(f"https://chromedriver.storage.googleapis.com/{version}/chromedriver_win32.zip")
     else:
         zipp = requests.get(f"https://chromedriver.storage.googleapis.com/{version}/chromedriver_linux64.zip")
@@ -33,7 +33,7 @@ def drive_download():
     with open("chromedriver.zip", "wb") as r:
         r.write(zipp.content)
 
-    if platforman.system() == "Windows":  
+    if platform.system() == "Windows":  
         os.system("tar -xf chromedriver.zip")
     else:
         os.system("unzip chromedriver.zip")
