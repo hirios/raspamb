@@ -16,6 +16,7 @@ except:
         
 from urllib.request import urlopen
 from selenium.common.exceptions import WebDriverException
+import platform
 import requests
 import os
 import re
