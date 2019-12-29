@@ -23,12 +23,20 @@ import re
 
 def drive_download():
     version = requests.get("http://chromedriver.storage.googleapis.com/LATEST_RELEASE").text
-    zipp = requests.get(f"https://chromedriver.storage.googleapis.com/{version}/chromedriver_win32.zip")
+    
+    if platforman.system() == "Windows":
+        zipp = requests.get(f"https://chromedriver.storage.googleapis.com/{version}/chromedriver_win32.zip")
+    else:
+        zipp = requests.get(f"https://chromedriver.storage.googleapis.com/{version}/chromedriver_linux64.zip")
 
     with open("chromedriver.zip", "wb") as r:
         r.write(zipp.content)
-  
-    os.system("tar -xf chromedriver.zip")
+
+    if platforman.system() == "Windows":  
+        os.system("tar -xf chromedriver.zip")
+    else:
+        os.system("unzip chromedriver.zip")
+        
     os.remove("chromedriver.zip")
 
 
@@ -59,7 +67,7 @@ def links_zippyshare():
     return lista_com_links
 
 
-if os.path.isfile("chromedriver.exe"):
+if os.path.isfile("chromedriver.exe") or os.path.isfile("chromedriver") :
     pass
 else:
     drive_download()
