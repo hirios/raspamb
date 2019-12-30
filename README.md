@@ -23,5 +23,7 @@ $ python raspamb.py
 
 Obs: Tentei configurar o script pra automatizar a instalação das dependências e percebi que pode dar um pequeno erro na primeira tentativa de rodar o script, então, repita o processo por no mínimo duas vezes. 
 
+Obs 2: Quando seu Google Chrome tiver mais atualizado que o chromedriver (arquivo que será baixado a primeira vez que vc rodar o script), você pode deletar o arquivo chromedriver pra que um novo e mais atualizado seja baixado. 
+
 # Disclaimer
 Não somos responsáveis pela utilização desse programa e de nenhuma das fontes de download utilizadas por esse código. Todas elas pertencendo ao anbient e não tendo nenhuma relação conosco.
