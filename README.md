@@ -13,7 +13,9 @@ $ cd raspamb
 
 # Uso
 
-Dentro da pasta onde está o `raspamb.py` e o chromedrive dê o seguinte comando:
+Primeiramente certifique-se de ter o Google Chrome instalado e atualizado em seu computador e depois;
+
+Dentro da pasta onde está o `raspamb.py` dê o seguinte comando:
 
 ```
 $ python raspamb.py
