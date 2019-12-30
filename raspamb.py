@@ -1,25 +1,37 @@
+import platform
+import os
+import re
+
+try:
+    import requests
+except:
+    try:
+        os.system("pip install requests")
+    except:
+        os.system("sudo pip install requests")
 try:
     from bs4 import BeautifulSoup
 except:
     try:
         os.system("pip install bs4")
+        from bs4 import BeautifulSoup
     except:
         os.system("sudo pip install bs4")
+        from bs4 import BeautifulSoup
 
 try:
     from selenium import webdriver
 except:
     try:
         os.system("pip install selenium")
+        from selenium import webdriver
     except:
         os.system("sudo pip install selenium")
+        from selenium import webdriver
         
 from urllib.request import urlopen
 from selenium.common.exceptions import WebDriverException
-import platform
-import requests
-import os
-import re
+
 
 
 def drive_download():
