@@ -23,6 +23,12 @@ $ python raspamb.py
 
 Obs: Tentei configurar o script pra automatizar a instalação das dependências e percebi que pode dar um pequeno erro na primeira tentativa de rodar o script, então, repita o processo por no mínimo duas vezes. 
 
+Obs 2: Se mesmo depois de repitir a inicialização do script por no máximo 3 vezes, instale as dependênciascom o seguinte comando:
+
+```
+pip install selenium bs4 requests
+```
+
 Obs 2: Quando seu Google Chrome tiver mais atualizado que o chromedriver (arquivo que será baixado a primeira vez que vc rodar o script), você pode deletar o arquivo chromedriver pra que um novo e mais atualizado seja baixado. 
 
 # Disclaimer
