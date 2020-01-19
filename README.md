@@ -23,7 +23,7 @@ $ python raspamb.py
 
 Obs: Tentei configurar o script pra automatizar a instalação das dependências e percebi que pode dar um pequeno erro na primeira tentativa de rodar o script, então, repita o processo por no mínimo duas vezes. 
 
-Obs 2: Se mesmo depois de repitir a inicialização do script por no máximo 3 vezes, instale as dependênciascom o seguinte comando:
+Obs 2: Se mesmo depois de repitir a inicialização do script por no máximo 3 vezes, instale as dependências com o seguinte comando:
 
 ```
 pip install selenium bs4 requests
