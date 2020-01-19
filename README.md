@@ -1,3 +1,5 @@
+Obs: Esse foi meu primeiro projeto, então não me atentei em atentender as boas práticas pythonicas. Relevem!
+
 # INSTALAÇÃO 
 
 **1) Clone o repositório usando:**
