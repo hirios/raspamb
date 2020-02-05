@@ -58,7 +58,7 @@ def localizar_driver():
         if os.name == 'posix':
             # Retorna o driver nos sistas operacionais posix(ubuntu, etc...)
             return webdriver.Chrome(os.getcwd() + '/chromedriver')
-        elif os.name == 'nt':
+        elif if platform.system() == "Windows":
             # Retorna o driver no sistema operacional windows
             return webdriver.Chrome(executable_path=os.getcwd() + '\chromedriver.exe')
         else:
