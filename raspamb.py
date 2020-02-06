@@ -6,17 +6,17 @@ try:
     import requests
 except:
     try:
-        os.system("pip install requests")
+        os.system('pip install requests')
     except:
-        os.system("sudo pip install requests")
+        os.system('sudo pip install requests')
 try:
     from bs4 import BeautifulSoup
 except:
     try:
-        os.system("pip install bs4")
+        os.system('pip install bs4')
         from bs4 import BeautifulSoup
     except:
-        os.system("sudo pip install bs4")
+        os.system('sudo pip install bs4')
         from bs4 import BeautifulSoup
 
 try:
@@ -33,8 +33,11 @@ from urllib.request import urlopen
 from selenium.common.exceptions import WebDriverException
 
 
-
 def drive_download():
+    '''
+        Esta função é responsavel por localizar a versão mais recente do Chrome Driver na internet e realiza o download
+    '''
+
     version = requests.get("http://chromedriver.storage.googleapis.com/LATEST_RELEASE").text
     
     if platform.system() == "Windows":
@@ -54,11 +57,15 @@ def drive_download():
 
 
 def localizar_driver():
+    '''
+        Esta função localiza o driver no computador do usuário
+    '''
+
     if os.path.isfile('chromedriver') or os.path.isfile('chromedriver.exe'):
         if os.name == 'posix':
             # Retorna o driver nos sistas operacionais posix(ubuntu, etc...)
             return webdriver.Chrome(os.getcwd() + '/chromedriver')
-        elif if platform.system() == "Windows":
+        elif platform.system() == 'Windows':
             # Retorna o driver no sistema operacional windows
             return webdriver.Chrome(executable_path=os.getcwd() + '\chromedriver.exe')
         else:
@@ -87,7 +94,6 @@ else:
     
 
 print('A execução do código pode demorar de acordo com a internet')
-print()
 url = 'https://www.anbient.com/anime/lista'
 
 html = urlopen(url)
@@ -169,7 +175,6 @@ def retornar_busca():
         # Le o numero do episódio que ira baixar
         while True:
             try:
-                print()
                 numero_episodio = int(input('Número do episódio (-1 para voltar): '))
                 if numero_episodio == -1:
                     retornar_busca()
@@ -181,8 +186,7 @@ def retornar_busca():
             except ValueError:
                 print('''!!!! Atenção !!!! Erro no número''')
 
-        print('Iniciando o download')
-        print()
+        print('Iniciando o download\n')
         driver.get(link)
         sopa = BeautifulSoup(driver.page_source, 'html.parser')
         zip_link = sopa.find_all("a", id=True)
