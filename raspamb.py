@@ -41,9 +41,10 @@ def drive_download():
 
     if platform.system() == "Windows":  
         os.system("tar -xf chromedriver.zip")
+        os.system("cls")
     else:
         os.system("unzip chromedriver.zip")
-        
+        os.system("clear")
     os.remove("chromedriver.zip")
 
 
@@ -84,7 +85,7 @@ else:
     drive_download()
     
 
-print('A execução do código pode demorar de acordo com a internet')
+print('A execução do código pode demorar de acordo com a internet\n')
 url = 'https://www.anbient.com/anime/lista'
 
 html = urlopen(url)
@@ -117,9 +118,8 @@ def retornar_busca():
                 tv_anbient.append(tv[c].get('href'))
                 quantidade_anime = len(list_animes)
         if len(list_animes) == 0:
-            print()
-            print('Certifique-se que o nome está correto!')
-            print()
+            print('\nCertifique-se que o nome está correto!\n')
+
 
     # Imprime a lista de animes
     for i in range(0, len(list_animes)):
@@ -130,7 +130,9 @@ def retornar_busca():
     while True:
         try:
             numero = int(input('Digite um número (-1 para voltar): '))
+
             if numero == -1:
+                print()
                 retornar_busca()
             if (numero - 1) < len(list_animes):
                 link = 'https://www.anbient.com{}'.format(tv_anbient[numero - 1])
@@ -159,6 +161,7 @@ def retornar_busca():
 
     lista_links = links_zippyshare()
     # Imprime a lista de animes
+    print()
     for i in range(0, len(lista_links)):
         print(f'[{i + 1}] {lista_links[i]}')
 
@@ -183,6 +186,7 @@ def retornar_busca():
         zip_link = sopa.find_all("a", id=True)
         zip = zip_link[0].get('href')
         picotado = str(link).split('/')
-        driver.get('https://{}{}'.format(picotado[2], zip))
+        episode = 'https://{}{}'.format(picotado[2], zip)
+        driver.get(episode)
 
 retornar_busca()
