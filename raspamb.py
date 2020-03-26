@@ -1,34 +1,25 @@
-import platform
 import os
 import re
+import platform
+import importlib
 
-try:
-    import requests
-except:
+def bible(lib):
     try:
-        os.system('pip install requests')
+        if importlib.import_module(lib):
+            return importlib.import_module(lib)
     except:
-        os.system('sudo pip install requests')
-try:
-    from bs4 import BeautifulSoup
-except:
-    try:
-        os.system('pip install bs4')
-        from bs4 import BeautifulSoup
-    except:
-        os.system('sudo pip install bs4')
-        from bs4 import BeautifulSoup
-
-try:
-    from selenium import webdriver
-except:
-    try:
-        os.system("pip install selenium")
-        from selenium import webdriver
-    except:
-        os.system("sudo pip install selenium")
-        from selenium import webdriver
+        try:
+            os.system(f'pip install {lib}')
+            return importlib.import_module(lib)
+        except:
+            os.system(f'sudo pip install {lib}')
+            return importlib.import_module(lib)
         
+requests = bible('requests')
+bs4 = bible('bs4')        
+selenium = bible('selenium')
+from bs4 import BeautifulSoup
+from selenium import webdriver
 from urllib.request import urlopen
 from selenium.common.exceptions import WebDriverException
 
