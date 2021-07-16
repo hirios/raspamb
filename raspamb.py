@@ -2,6 +2,9 @@ import os
 import re
 import platform
 import importlib
+from pathlib import Path
+import subprocess
+
 
 def bible(lib):
     try:
@@ -9,65 +12,66 @@ def bible(lib):
             return importlib.import_module(lib)
     except:
         try:
-            os.system(f'pip install {lib}')
+            os.system(f'pip install {lib}')        
             return importlib.import_module(lib)
         except:
-            os.system(f'sudo pip install {lib}')
+            os.system(f'sudo pip install {lib}')                     
             return importlib.import_module(lib)
+
         
 requests = bible('requests')
 bs4 = bible('bs4')        
 selenium = bible('selenium')
+webdriver_manager = bible('webdriver_manager')
+from webdriver_manager.microsoft import EdgeChromiumDriverManager
+from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from urllib.request import urlopen
 from selenium.common.exceptions import WebDriverException
 
 
-def drive_download():
-    '''
-        Esta função é responsavel por localizar a versão mais recente do Chrome Driver na internet e realiza o download
-    '''
+def popen(cmd):
+    startupinfo = subprocess.STARTUPINFO()
+    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    process = subprocess.Popen(cmd, shell=True, startupinfo=startupinfo, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
+    return process.stdout.read()
 
-    version = requests.get("http://chromedriver.storage.googleapis.com/LATEST_RELEASE").text
-    
-    if platform.system() == "Windows":
-        zipp = requests.get(f"https://chromedriver.storage.googleapis.com/{version}/chromedriver_win32.zip")
+
+def get_path_exe(exe_name, thirty_two=True):
+    '''
+        Retorna a path de um executável
+    '''
+    path_exe = None
+    DISCO = popen('echo %WINDIR%').decode().split(':')[0]
+
+
+    if thirty_two:
+    	path_program_files = rf'{DISCO}:\Program Files (x86)'
     else:
-        zipp = requests.get(f"https://chromedriver.storage.googleapis.com/{version}/chromedriver_linux64.zip")
-
-    with open("chromedriver.zip", "wb") as r:
-        r.write(zipp.content)
-
-    if platform.system() == "Windows":  
-        os.system("tar -xf chromedriver.zip")
-        os.system("cls")
-    else:
-        os.system("unzip chromedriver.zip")
-        os.system("clear")
-    os.remove("chromedriver.zip")
+    	path_program_files = rf'{DISCO}:\Program Files'
 
 
-def localizar_driver():
+    for path in Path(path_program_files).rglob(exe_name):
+    	path_exe = path
+
+    return path_exe
+
+
+def return_driver():
     '''
-        Esta função localiza o driver no computador do usuário
+        Esta função baixa e retorna o driver no computador do usuário
     '''
 
-    if os.path.isfile('chromedriver') or os.path.isfile('chromedriver.exe'):
-        if os.name == 'posix':
-            # Retorna o driver nos sistas operacionais posix(ubuntu, etc...)
-            return webdriver.Chrome(os.getcwd() + '/chromedriver')
-        elif platform.system() == 'Windows':
-            # Retorna o driver no sistema operacional windows
-            return webdriver.Chrome(executable_path=os.getcwd() + '\chromedriver.exe')
-        else:
-            print('Sistema operacional, não reconhecido.')
-            print('Envie o resultado abaixo para os desenvolvedores em https://github.com/hirios/raspamb/')
-            print(os.name)
-            exit()
-    else:
-        print('Nao encontrei o driver na mesma pasta do arquivo\nTentarei pela path do sistema')
-        return webdriver.Chrome()
+    if get_path_exe('msedge.exe'):
+    	return webdriver.Edge(EdgeChromiumDriverManager().install())
+
+    if get_path_exe('chrome.exe'):
+    	return webdriver.Chrome(ChromeDriverManager().install())
+
+    print("Você precisa ter o Google Chrome ou Edge instalado")
+    input("")
+    quit()
 
 
 def links_zippyshare():
@@ -79,15 +83,8 @@ def links_zippyshare():
     return lista_com_links
 
 
-if os.path.isfile("chromedriver.exe") or os.path.isfile("chromedriver") :
-    pass
-else:
-    drive_download()
-    
-
 print('A execução do código pode demorar de acordo com a internet\n')
 url = 'https://www.anbient.com/anime/lista'
-
 html = urlopen(url)
 bs = BeautifulSoup(html, 'html.parser')
 data = bs.find(class_="list")
@@ -100,6 +97,7 @@ lista = []
 for c in range(0, len(dat)):
     d = dat[c].text
     lista.append(str(d).lower())
+
 
 def retornar_busca():
     global driver
@@ -152,7 +150,7 @@ def retornar_busca():
     print('Recomenda-se que o chromedriver esteja na mesma pasta que este script')
 
     try:
-        driver = localizar_driver()
+        driver = return_driver()
         driver.get(link)
     except WebDriverException as e:
         print('Ocorreu um erro')
@@ -187,6 +185,13 @@ def retornar_busca():
         zip = zip_link[0].get('href')
         picotado = str(link).split('/')
         episode = 'https://{}{}'.format(picotado[2], zip)
+        
+        
+        path_vlc = get_path_exe("vlc.exe", False)
+
+        if path_vlc:
+        	popen(f'"{path_vlc}" {episode}')
+
         driver.get(episode)
 
 retornar_busca()
