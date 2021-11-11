@@ -31,6 +31,7 @@ from urllib.request import urlopen
 from selenium.common.exceptions import WebDriverException
 
 
+
 def popen(cmd):
     startupinfo = subprocess.STARTUPINFO()
     startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
@@ -45,7 +46,7 @@ def get_path_exe(exe_name, thirty_two=True):
     path_exe = None
     DISCO = popen('echo %WINDIR%').decode().split(':')[0]
 
-
+    
     if thirty_two:
     	path_program_files = rf'{DISCO}:\Program Files (x86)'
     else:
@@ -63,11 +64,13 @@ def return_driver():
         Esta função baixa e retorna o driver no computador do usuário
     '''
 
+    if get_path_exe('chrome.exe', False):
+        return webdriver.Chrome(ChromeDriverManager().install())
+
+
     if get_path_exe('msedge.exe'):
     	return webdriver.Edge(EdgeChromiumDriverManager().install())
 
-    if get_path_exe('chrome.exe'):
-    	return webdriver.Chrome(ChromeDriverManager().install())
 
     print("Você precisa ter o Google Chrome ou Edge instalado")
     input("")
@@ -78,8 +81,14 @@ def links_zippyshare():
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     global lista_com_links
     lista_com_links = []
-    for link in soup.find_all(href=re.compile('zippyshare.com')):
+
+    for link in soup.find_all(href=re.compile('/zippyshare/')):
         lista_com_links.append(link['href'])
+
+    if len(lista_com_links) == 0:
+        for link in soup.find_all(href=re.compile('zippyshare.com')):
+            lista_com_links.append(link['href'])
+
     return lista_com_links
 
 
@@ -180,17 +189,12 @@ def retornar_busca():
 
         print('Iniciando o download\n')
         driver.get(link)
-        sopa = BeautifulSoup(driver.page_source, 'html.parser')
-        zip_link = sopa.find_all("a", id=True)
-        zip = zip_link[0].get('href')
-        picotado = str(link).split('/')
-        episode = 'https://{}{}'.format(picotado[2], zip)
-        
-        
-        path_vlc = get_path_exe("vlc.exe", False)
+        episode = driver.find_element_by_xpath('//a[@id="dlbutton"]').get_attribute('href')
 
-        if path_vlc:
-        	popen(f'"{path_vlc}" {episode}')
+
+        # path_vlc = get_path_exe("vlc.exe", False)
+        # if path_vlc:
+        # 	popen(f'"{path_vlc}" {episode}')
 
         driver.get(episode)
 
