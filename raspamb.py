@@ -1,201 +1,176 @@
-import os
-import re
-import platform
-import importlib
-from pathlib import Path
-import subprocess
+import requests.packages.urllib3.util.connection as urllib3_cn
+from urllib.parse import unquote
+from vlc import start_stream
+from servers import zshared
+from thefuzz import fuzz
+import lxml.html
+import requests
+import socket
+import base64
 
 
-def bible(lib):
+def allowed_gai_family():
+    return socket.AF_INET
+
+
+urllib3_cn.allowed_gai_family = allowed_gai_family
+
+
+def get_index(input_text:str, size: int):
+    index = None 
+
     try:
-        if importlib.import_module(lib):
-            return importlib.import_module(lib)
-    except:
-        try:
-            os.system(f'pip install {lib}')        
-            return importlib.import_module(lib)
-        except:
-            os.system(f'sudo pip install {lib}')                     
-            return importlib.import_module(lib)
+        index = int(input(input_text)) - 1
+    except ValueError:
+        pass
 
-        
-requests = bible('requests')
-bs4 = bible('bs4')        
-selenium = bible('selenium')
-webdriver_manager = bible('webdriver_manager')
-from webdriver_manager.microsoft import EdgeChromiumDriverManager
-from webdriver_manager.chrome import ChromeDriverManager
-from bs4 import BeautifulSoup
-from selenium import webdriver
-from urllib.request import urlopen
-from selenium.common.exceptions import WebDriverException
+    # CASO SEJA PASSADO UMA LETRA
+    if index == None:
+        print('!! Use apenas números !!')
+        return True
 
+    # CASO SEJA USADO -1 PARA VOLTAR
+    elif index == -2:
+        # break
+        return False
 
-
-def popen(cmd):
-    startupinfo = subprocess.STARTUPINFO()
-    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-    process = subprocess.Popen(cmd, shell=True, startupinfo=startupinfo, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE)
-    return process.stdout.read()
-
-
-def get_path_exe(exe_name, thirty_two=True):
-    '''
-        Retorna a path de um executável
-    '''
-    path_exe = None
-    DISCO = popen('echo %WINDIR%').decode().split(':')[0]
-
+    # SE FOR MAIOR QUE SIZE OU MENOR QUE 0
+    elif index <= -1 or index >= size:
+        print('!! Número inválido !!')
+        return True
     
-    if thirty_two:
-    	path_program_files = rf'{DISCO}:\Program Files (x86)'
     else:
-    	path_program_files = rf'{DISCO}:\Program Files'
+        return index
 
 
-    for path in Path(path_program_files).rglob(exe_name):
-    	path_exe = path
+def download_episode(download_link: str) -> None:
+    print('[+] Iniciando download do episódio...')
+    video_content = requests.get(download_link, stream=True)
+        
+    if 'Content-Disposition' in video_content.headers:
+        videoname = video_content.headers['Content-Disposition'].split("'")[-1]
+    else:
+        videoname = 'anime.mkv'
 
-    return path_exe
-
-
-def return_driver():
-    '''
-        Esta função baixa e retorna o driver no computador do usuário
-    '''
-
-    if get_path_exe('chrome.exe', False):
-        return webdriver.Chrome(ChromeDriverManager().install())
-
-
-    if get_path_exe('msedge.exe'):
-    	return webdriver.Edge(EdgeChromiumDriverManager().install())
-
-
-    print("Você precisa ter o Google Chrome ou Edge instalado")
-    input("")
-    quit()
-
-
-def links_zippyshare():
-    soup = BeautifulSoup(driver.page_source, 'html.parser')
-    global lista_com_links
-    lista_com_links = []
-
-    for link in soup.find_all(href=re.compile('/zippyshare/')):
-        lista_com_links.append(link['href'])
-
-    if len(lista_com_links) == 0:
-        for link in soup.find_all(href=re.compile('zippyshare.com')):
-            lista_com_links.append(link['href'])
-
-    return lista_com_links
-
-
-print('A execução do código pode demorar de acordo com a internet\n')
-url = 'https://www.anbient.com/anime/lista'
-html = urlopen(url)
-bs = BeautifulSoup(html, 'html.parser')
-data = bs.find(class_="list")
-dat = data.find_all("a")
-tv = data.find_all("a", href=True)
-# epi = data.find_all("td", {'class':  'epi'})
-
-lista = []
-
-for c in range(0, len(dat)):
-    d = dat[c].text
-    lista.append(str(d).lower())
-
-
-def retornar_busca():
-    global driver
-    global list_animes
+    with open(videoname, "wb") as r:
+        r.write(video_content.content)    
     
-    quantidade_anime = 0
-    list_animes = []
-    tv_anbient = []
-    while quantidade_anime == 0:
-        anime = input('Nome do anime: ').lower().strip()
-
-        for c in range(0, len(lista)):
-            names = lista[c].find(anime)
-            if names != (-1):
-                list_animes.append(lista[c])
-                tv_anbient.append(tv[c].get('href'))
-                quantidade_anime = len(list_animes)
-        if len(list_animes) == 0:
-            print('\nCertifique-se que o nome está correto!\n')
+    print('[+] Download concluído !!')
+    print(f'[+] Download salvo como: {videoname}')
 
 
-    # Imprime a lista de animes
-    for i in range(0, len(list_animes)):
-        print(f'[{i + 1}] {list_animes[i].title()}')
-    print()
+class Raspamb:
+    def __init__(self):
+        self.URL_ANIMES_LIST = 'https://www.anbient.com/anime/lista'
+        self.URL_ANBIENT = 'https://www.anbient.com'
 
-    lista_numero_animes = []
-    while True:
-        try:
-            numero = int(input('Digite um número (-1 para voltar): '))
+        self.animes_list = self.get_anime_list()
 
-            if numero == -1:
-                print()
-                retornar_busca()
-            if (numero - 1) < len(list_animes):
-                link = 'https://www.anbient.com{}'.format(tv_anbient[numero - 1])
-                # print(link)
-                break
-            else:
-                print('Numero invalido!!!\n')
-                print()
-        except ValueError:
-            print('!!!!! USE APENAS NUMEROS !!!!!!')
-            print()
-        except Exception as e:
-            print('Tem outra coisa dando bosta aq')
-            print(e)
+        self.matchs: list[list[str], int] = None
+        self.selected: list[str] = None
+        self.episodes: list[str] = None
 
-    print('Capturando links dos episódios...')
-    print('Recomenda-se que o chromedriver esteja na mesma pasta que este script')
 
-    try:
-        driver = return_driver()
-        driver.get(link)
-    except WebDriverException as e:
-        print('Ocorreu um erro')
-        print(e)
-        exit()
+    def get_anime_list(self) -> list[list[str, str]]:        
+        response = requests.get(self.URL_ANIMES_LIST)
+        parser = lxml.html.fromstring(response.text)
+        elements = parser.xpath('//td/a') 
+        animes_list = []
 
-    lista_links = links_zippyshare()
-    # Imprime a lista de animes
-    print()
-    for i in range(0, len(lista_links)):
-        print(f'[{i + 1}] {lista_links[i]}')
+        for x in elements:
+            href = x.get('href')
+            title = x.text
+            animes_list.append([title, href])
 
-    while True:
-        # Le o numero do episódio que ira baixar
+        return animes_list
+
+
+    def search(self, anime_name: str) -> None:
+        matchs = []
+        
+        for x in self.animes_list:
+            ratio = fuzz.partial_ratio(anime_name, x[0])
+            if ratio > 70:
+                matchs.append([x, ratio])
+
+        matchs.sort(key = lambda x: x[1], reverse = True)
+        self.matchs = matchs
+
+
+    def select_anime(self) -> None:
+        size = len(self.matchs)
+        cont = 1 
+
+        for x in self.matchs:
+            print([cont], x[0][0])
+            cont += 1
+        
         while True:
-            try:
-                numero_episodio = int(input('Número do episódio (-1 para voltar): '))
-                if numero_episodio == -1:
-                    retornar_busca()
-                elif numero_episodio <= len(lista_links):
-                    link = lista_links[numero_episodio - 1]
-                    break
-                else:
-                    print('Episódio invalido, escolha um numero entre 1 e {}'.format(len(lista_links)))
-            except ValueError:
-                print('''!!!! Atenção !!!! Erro no número''')
+            index = get_index(input_text='\nEscolha o anime: (-1 voltar): ', size=size)  
+            
+            if type(index) == int:
+                self.selected = self.matchs[index][0]
+                break
 
-        print('Iniciando o download\n')
-        driver.get(link)
-        episode = driver.find_element_by_xpath('//a[@id="dlbutton"]').get_attribute('href')
+            elif not index:
+                return 'continue' 
 
 
-        # path_vlc = get_path_exe("vlc.exe", False)
-        # if path_vlc:
-        # 	popen(f'"{path_vlc}" {episode}')
+    def get_episode_list(self) -> None:
+        url_of_title = self.URL_ANBIENT + self.selected[1] 
+        response_of_title = requests.get(url_of_title)
+        parser_of_title = lxml.html.fromstring(response_of_title.text)
+        url_base64 = parser_of_title.xpath('//a[@class="ajax padrao"]')[0].get('href')
 
-        driver.get(episode)
+        url_of_episodes = self.URL_ANBIENT + base64.b64decode(url_base64).decode()
 
-retornar_busca()
+        SERVER = 'zippyshare'
+        response_episodes = requests.get(url_of_episodes)
+        parser_episodes = lxml.html.fromstring(response_episodes.text)
+        
+        episodes = parser_episodes.xpath(f'//div[contains(@class, "servidor  {SERVER}") or contains(@class, "servidor  {SERVER} active")]/li/a/@href')
+
+        if len(episodes) == 0:
+            print('ERRRROO AO EXTRAIR EPISÓDIOS')
+            exit()
+
+        self.episodes = episodes
+
+
+    def select_episode(self):
+        size = len(self.episodes)
+
+        cont = 1 
+        for x in self.episodes:
+            print([cont], x)
+            cont += 1
+
+        while True:
+            index = get_index(input_text='\nSelecione o episódio: (-1 voltar): ', size=size)
+
+            if type(index) == int:
+                download_link = zshared(self.episodes[index])
+                print('\n[+] Direct_Link: ', download_link)
+                print('[+] Tentando iniciar strem com VLC')
+                if not start_stream(download_link):
+                    download_episode(download_link)
+
+            elif not index:
+                return 'continue'           
+
+
+if __name__ == '__main__':
+    animes = Raspamb()
+
+    while True:
+        anime_name = input('\nDigite um anime: ')
+        animes.search(anime_name)
+
+        if animes.select_anime() == 'continue':
+            continue
+
+        animes.get_episode_list()
+        if animes.select_episode() == 'continue':
+            continue
+
+
