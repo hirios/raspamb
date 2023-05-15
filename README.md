@@ -1,3 +1,5 @@
+## !!! PROJETO OBSOLETO !!!
+
 O raspamb é um projeto voltado para amantes de animes. Com ele você pode assistir animes (caso tenha o vlc instalado), ou então fazer o download dos episódios. Tudo de uma maneira rápida e simples. 
 
 # INSTALAÇÃO 
